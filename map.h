@@ -25,6 +25,7 @@ public:
     size_t size ();
     mymap ();
     ~mymap ();
+    T2 &operator[] (T1 key);
 private:
     Node <T1, T2> *tree_add (Node <T1, T2> *tree, Node <T1, T2> *parent, T1 key, T2 val);
     void tree_destroy (Node <T1, T2> *tree);
@@ -32,6 +33,7 @@ private:
     Node <T1, T2> *tree_find (Node <T1, T2> *tree, T1 key);
 
     Node <T1, T2> *TREE;
+    Node <T1, T2> *last_added;
     size_t sz;
     T2 NOT_FOUND;
 };

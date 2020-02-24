@@ -2,6 +2,7 @@ template <typename T1, typename T2>
 mymap<T1, T2>::mymap ()
 {
     TREE = nullptr;
+    last_added = nullptr;
     sz = 0;
     NOT_FOUND = {};
 }
@@ -25,6 +26,7 @@ Node <T1, T2> * mymap<T1, T2>::tree_add (Node <T1, T2> *tree, Node <T1, T2> *par
         tree->left = nullptr;
         tree->right = nullptr;
         tree->parent = parent;
+        last_added = tree;
         return tree;
     }
     if (key > tree->key)
@@ -155,10 +157,29 @@ int mymap<T1, T2>::erase (T1 key)
         delete swapping;
         return 0;
     }
-    if (erasing->parent->left == erasing)
-        erasing->parent->left = nullptr;
-    if (erasing->parent->right == erasing)
-        erasing->parent->right = nullptr;
+    if (erasing->parent == nullptr) {
+        delete erasing;
+        TREE = nullptr;
+        return 0;
+    }
+    else {
+        if (erasing->parent->left == erasing)
+            erasing->parent->left = nullptr;
+        if (erasing->parent->right == erasing)
+            erasing->parent->right = nullptr;
+    }
     delete erasing;
     return 0;
+}
+
+template <typename T1, typename T2>
+T2 &mymap<T1, T2>::operator[] (T1 key)
+{
+    Node <T1, T2> *found = tree_find (TREE, key);
+    if (found != nullptr)
+        return found->val;
+    T2 trash_val = {};
+    TREE = tree_add (TREE, nullptr, key, trash_val);
+    sz++;
+    return last_added->val;
 }
